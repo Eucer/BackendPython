@@ -74,6 +74,17 @@ async def process_data(dc_product: str):
     #     searchProducts.update_one({"_id": doc["_id"]}, {
     #         "$set": {"ped": dc}})
 
+    # Inicializa el contador en 1
+    contador = 1
+
+    # Obtiene todos los documentos de la colección
+    documentos = searchProducts.find()
+
+    # Para cada documento, agrega un nuevo campo "codigo" con un código único
+    for doc in documentos:
+        searchProducts.update_one({"_id": doc["_id"]}, {
+            "$set": {"index": contador}})
+        contador += 1
     # code
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -101,10 +112,11 @@ async def process_data(dc_product: str):
         # Crea un objeto writer
         writer = csv.writer(csvfile)
         # Itera sobre el array y escribe cada fila en el archivo CSV
-        writer.writerow(['dc', 'name', 'category', '_id'])
+        writer.writerow(['index', 'dc', 'name', 'category',
+                        '_id', 'slug', 'marca', 'dui'])
         for documento in dataProduct:
             writer.writerow(
-                [documento['dc'], documento['name'], documento['category'], documento['_id']])
+                [documento['index'], documento['dc'], documento['name'], documento['category'], documento['_id'],  documento['slug'],  documento['marca'],  documento['dui']])
 
     try:
         views = pd.read_csv(

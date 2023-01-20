@@ -44,10 +44,8 @@ def process_data(dc_product):
     # documentos = searchProducts.find()
 
     # for doc in documentos:
-    #     dc = -1
+    #     dc = 'Aquí'
     #     while True:
-    #         # Genera un código aleatorio de 8 dígitos
-    #         dc = random.randint(10000000, 99999999)
 
     #         # Comprueba si el código ya existe en la base de datos
     #         existe = searchProducts.find_one({"ped": dc})
