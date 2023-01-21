@@ -43,7 +43,7 @@ print(similarity)
 print(similarity.shape)
 # getting the product name from the user
 
-product_name = " AirPods Pro"
+product_name = "iPhone 14 Pro Max"
 # creating a list with all the product names given in the dataset
 
 list_of_all_titles = products_data['name'].tolist()
@@ -83,7 +83,7 @@ i = 1
 for product in sorted_similar_product:
     index = product[0]
     title_from_index = products_data[products_data.index ==
-                                     index]['_id'].values[0]
+                                     index]['name'].values[0]
     if (i < 30):
         print(i, '.', title_from_index)
         i += 1

@@ -146,26 +146,50 @@ async def process_data(name_product: str):
 
     # selecting the relevant features for recommendation
 
-    selected_features = ['sub-category',
-                         'raw', 'keywords', 'name', 'category', 'marca', ]
-
+    selected_features = ['category', 'slug', 'name', 'dui', 'marca']
+    print(selected_features)
     # replacing the null valuess with null string
 
     for feature in selected_features:
         products_data[feature] = products_data[feature].fillna('')
 
-    combined_features = products_data['sub-category']+' '+products_data['name']+' ' + \
-        products_data['raw']+' '+products_data['category'] + \
+    combined_features = products_data['category']+' '+products_data['slug']+' ' + \
+        products_data['name']+' '+products_data['dui'] + \
         ' '+products_data['marca']
 
     print(combined_features)
+
     # converting the text data to feature vectors
     vectorizer = TfidfVectorizer()
     feature_vectors = vectorizer.fit_transform(combined_features)
+    print(feature_vectors)
 
     # getting the similarity scores using cosine similarity
 
     similarity = cosine_similarity(feature_vectors)
+    print(similarity)
+    selected_features = ['category', 'slug', 'name', 'dui', 'marca']
+    print(selected_features)
+    # replacing the null valuess with null string
+
+    for feature in selected_features:
+        products_data[feature] = products_data[feature].fillna('')
+
+    combined_features = products_data['category']+' '+products_data['slug']+' ' + \
+        products_data['name']+' '+products_data['dui'] + \
+        ' '+products_data['marca']
+
+    print(combined_features)
+
+    # converting the text data to feature vectors
+    vectorizer = TfidfVectorizer()
+    feature_vectors = vectorizer.fit_transform(combined_features)
+    print(feature_vectors)
+
+    # getting the similarity scores using cosine similarity
+
+    similarity = cosine_similarity(feature_vectors)
+    print(similarity)
 
     product_name = name_product
     # creating a list with all the product names given in the dataset

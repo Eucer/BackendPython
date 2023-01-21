@@ -77,17 +77,16 @@ async def process_data(name_product: str):
     #     searchProducts.update_one({"_id": doc["_id"]}, {
     #         "$set": {"ped": dc}})
 
-    # # Inicializa el contador en 1
-    # contador = 1
+    # Inicializa el contador en 1
 
-    # # Obtiene todos los documentos de la colección
-    # documentos = searchProducts.find()
+    # Obtiene todos los documentos de la colección
+    documentos = searchProducts.find()
 
-    # # Para cada documento, agrega un nuevo campo "codigo" con un código único
-    # for doc in documentos:
-    #     searchProducts.update_one({"_id": doc["_id"]}, {
-    #         "$set": {"index": contador}})
-    #     contador += 1
+    # Para cada documento, agrega un nuevo campo "codigo" con un código único
+    for doc in documentos:
+        searchProducts.update_one({"_id": doc["_id"]}, {
+            "$set": {"store": ['637f24cc2250d328d6aa0a79']}})
+
     # code
 
     # Inicializa el contador en 1
