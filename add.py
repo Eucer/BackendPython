@@ -20,7 +20,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import difflib
 import pprint
-
+from pydantic import BaseModel
+from fuzzywuzzy import process
+from fuzzywuzzy import fuzz
 app = FastAPI()
 
 app.add_middleware(
@@ -47,8 +49,33 @@ def handle_exception(request, exc):
     return {"message": str(exc)}
 
 
-@app.get("/editData")
-async def process_data(name_product: str):
+@app.get("/suggestions")
+async def get_suggestions(q: str):
+    client = pymongo.MongoClient(
+        "mongodb+srv://germys:LWBVI45dp8jAIywv@douvery.0oma0vw.mongodb.net/Production")
+
+    db = client['Production']
+
+    products = db['products']
+    products = list(products.find(
+        {'$or': [
+            {'name': {'$regex': q, '$options': 'i'}},
+            {'keywords': {'$regex': q, '$options': 'i'}},
+            {'category': {'$regex': q, '$options': 'i'}},
+
+        ]}
+    ))
+
+    product_names = [product["name"].lower() for product in products]
+    suggestions = [(products["name"], fuzz.token_set_ratio(
+        q, product_name)) for product_name in product_names]
+    suggestions.sort(key=lambda x: x[1], reverse=True)
+    suggestions = suggestions[:13]
+    return [suggestion[0] for suggestion in suggestions]
+
+
+@app.get("/edit-data")
+async def process_data():
 
     client = pymongo.MongoClient(
         "mongodb+srv://germys:LWBVI45dp8jAIywv@douvery.0oma0vw.mongodb.net/Production")
@@ -81,12 +108,11 @@ async def process_data(name_product: str):
     # contador = 1
 
     # # Obtiene todos los documentos de la colección
-    # documentos = searchProducts.find()
+    documentos = searchProducts.find()
 
-    # # Para cada documento, agrega un nuevo campo "codigo" con un código único
-    # for doc in documentos:
-    #     searchProducts.update_one({"_id": doc["_id"]}, {
-    #         "$set": {"index": contador}})
-    #     contador += 1
-    # code
-    return {"message": "Yes , edit"}
+    # Para cada documento, agrega un nuevo campo "codigo" con un código único
+    for doc in documentos:
+        searchProducts.update_one({"_id": doc["_id"]}, {
+            "$set": {"item_condition": 'Nuevo'}})
+
+    return ()
